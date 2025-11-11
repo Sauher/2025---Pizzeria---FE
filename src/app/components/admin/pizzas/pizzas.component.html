@@ -19,7 +19,7 @@
         <tbody>
             <tr *ngFor="let pizza of pagedPizza; let i = index">
                 <td>{{i+1}}.</td>
-                <td>{{pizza.image}}</td>
+                <td><img *ngIf="pizza.image" src="http://localhost:3000/uploads/{{pizza.image}}" alt="{{pizza.name}}" (click)="openLightbox(pizza.image)" ></td>
                 <td>{{pizza.name}}</td>
                 <td>{{pizza.descrip}}</td>
                 <td class="text-end">{{pizza.calories | numberFormat}} kcal</td>
@@ -32,7 +32,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="7">Összesen: <strong>0</strong> rendelés</td>
+                <td colspan="7">Összesen: <strong>{{startIndex+1}} - {{endIndex}} / {{pizzas.length}}</strong> féle pizza</td>
             </tr>
         </tfoot>
     </table>
@@ -69,14 +69,16 @@
             <input type="text" class="form-control" id="name" placeholder="Név" [(ngModel)] = "pizza.name">
             <label for="name">Név: <em>*</em></label>
           </div>
-          <div class="mb-3">
+
+          <div class="mb-3" *ngIf="!pizza.image">
             <label for="formFileDisabled" class="form-label"></label>
             <input class="form-control" type="file" id="image" accept="image/*" (change)="onFileSelected($event)">
           </div>
+         
           <div class="form-floating mb-3">
-            <input type="number" class="form-control" id="calories" placeholder="Kalória" [(ngModel)] = "pizza.calories">
-            <label for="calories">Kalória: <em>*</em></label>
+            <img *ngIf="pizza.image" src="http://localhost:3000/uploads/{{pizza.image}}" alt="pizza.name">
           </div>
+          <button class="btn btn-danger ms-3" *ngIf="pizza.image" (click)="deleteimg(pizza.image,pizza.id)">Töröl <i class="bi bi-x-square-fill"></i></button>
           <div class="form-floating mb-3">
             <input type="number" class="form-control" id="price" placeholder="Ár" [(ngModel)] = "pizza.price">
             <label for="price">Ár: <em>*</em></label>
@@ -101,16 +103,17 @@
       <div class="modal-content">
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="staticBackdropLabel">Megerősítés</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <button type="button" class="btn-close" aria-label="Close" (click)="cancel()"></button>
         </div>
         <div class="modal-body">
           Biztosan törölni szeretnéd?
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nem</button>
-          <button type="button" class="btn btn-danger" (click)="delete()">Igen</button>
+          <button type="button" class="btn btn-danger" (click)="delete(pizza.id)">Igen</button>
         </div>
       </div>
     </div>
   </div>
+  <app-lightbox [imageUrl]="lightBoxImg" [visible]="lightboxVisible" (closed)="lightboxVisible = false"></app-lightbox>
 </div>

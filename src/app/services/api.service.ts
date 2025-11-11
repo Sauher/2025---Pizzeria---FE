@@ -158,4 +158,19 @@ export class APIService {
       }
     }
   }
+  async DelIMG(filename: string){
+    try{
+      const res = await axios.delete(`${this.SERVER}/image/${filename}`)
+    return {
+      status:200,
+      data : res.data
+    }
+    }
+    catch (err : any){
+      return {
+        status:500,
+        message: "A fájl törlése sikertelen!"
+      }
+    }
+  }
 }

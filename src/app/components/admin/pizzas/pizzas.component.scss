@@ -1,3 +1,12 @@
 textarea{
     min-height: 300px;
 }
+img{
+    padding: 5px;
+    border: white 1px solid;
+    width: 150px;
+}
+img:hover{
+    cursor: pointer;
+    scale: 1,1;
+}

@@ -7,6 +7,7 @@ import { enviroment } from '../../../../enviroments/enviroment';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from '../../../services/message.service';
 import { NumberFormatPipe } from "../../../pipes/number-format.pipe";
+import { LightboxComponent } from "../../system/lightbox/lightbox.component";
 declare var bootstrap: any;
 
 @Component({
@@ -16,7 +17,8 @@ declare var bootstrap: any;
     CommonModule,
     RouterModule,
     FormsModule,
-    NumberFormatPipe
+    NumberFormatPipe,
+    LightboxComponent
 ],
   templateUrl: './pizzas.component.html',
   styleUrl: './pizzas.component.scss'
@@ -27,7 +29,12 @@ export class PizzasComponent implements OnInit{
   pageSize = 5;
   totalPages = 1;
   pagedPizza : Pizza[] = [];
+
+  lightboxVisible = false
+  lightBoxImg = ''
   
+  startIndex = 0
+  endIndex = 0
 
 
   formModal: any
@@ -142,7 +149,11 @@ export class PizzasComponent implements OnInit{
     this.pizza.id = id;
     this.confirmModal.show()
   }
-  delete(){
+  delete(id:number){
+    let pizza = this.pizzas.find(item => item.image != '' && item.id == id)
+    if(pizza){
+      this.Api.DelIMG(pizza.image!)
+    }
     this.Api.Delete("pizzas", this.pizza.id).then(res=>{
       this.msg.show('success','OK',"Pizza sikeresen törölve!")
       this.confirmModal.hide()
@@ -161,9 +172,9 @@ export class PizzasComponent implements OnInit{
   setPage(page:number){
     
     this.currentPage = page;
-    const startIndex = (page -1) * this.pageSize;
-    const endIndex = startIndex + this.pageSize;
-    this.pagedPizza = this.pizzas.slice(startIndex,endIndex)
+    this.startIndex = (page -1) * this.pageSize;
+    this.endIndex = this.startIndex + this.pageSize;
+    this.pagedPizza = this.pizzas.slice(this.startIndex,this.endIndex)
   }
 
   getPizza(id:number){
@@ -175,5 +186,31 @@ export class PizzasComponent implements OnInit{
   }
   onFileSelected(event: any){
     this.selectedFile = event.target.files[0]
+  }
+  deleteimg(filename : string, id:number){
+    this.Api.DelIMG(filename).then(res =>{
+      if(res.status == 200){
+        this.pizza.image
+        this.Api.Update('pizzas',id,this.pizza).then(res =>{
+          this.msg.show('success', 'Ok', 'A kép törölve!')
+        })
+      }
+    })
+  }
+  openLightbox(image: string){
+    this.lightBoxImg = 'http://localhost:3000/uploads/'+image
+    this.lightboxVisible = true
+  }
+
+  cancel(){
+    this.pizza = {
+      id: 0,
+      name: '',
+      descrip: '',
+      image:'',
+      calories: 0,
+      price: 0
+    }
+    this.confirmModal.hide()
   }
 }
