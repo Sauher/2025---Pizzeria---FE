@@ -17,16 +17,16 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let pizza of pizzas; let i = index">
+            <tr *ngFor="let pizza of pagedPizzas; let i = index">
                 <td>{{i+1}}.</td>
                 <td>{{pizza.image}}</td>
                 <td>{{pizza.name}}</td>
                 <td>{{pizza.descrip}}</td>
-                <td class="text-end">{{pizza.calories}} kcal</td>
-                <td class="text-end">{{pizza.price}} {{currency}}</td>
+                <td class="text-end">{{pizza.calories | numberFormat}} kcal</td>
+                <td class="text-end">{{pizza.price | numberFormat}} {{currency}}</td>
                 <td class="text-end">
-                    <button class="btn btn-warning me-3" data-bs-toggle="modal" data-bs-target="#formModal"><i class="bi bi-pencil-square"></i></button>
-                    <button class="btn btn-danger me-3"  data-bs-toggle="modal" data-bs-target="#confirmModal"><i class="bi bi-x-square-fill"></i></button>
+                    <button class="btn btn-warning me-3" data-bs-toggle="modal"  (click)="getPizza(pizza.id)"><i class="bi bi-pencil-square"></i></button>
+                    <button class="btn btn-danger me-3"  data-bs-toggle="modal" (click)="delPizza(pizza.id)"><i class="bi bi-x-square-fill"></i></button>
                 </td>
             </tr>
         </tbody>
@@ -36,18 +36,17 @@
             </tr>
         </tfoot>
     </table>
-    <nav aria-label="Page navigation example">
+    <nav aria-label="Page navigation example" *ngIf="totalPages > 1">
         <ul class="pagination">
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
+            <a class="page-link" aria-label="Previous" (click)="setPage(currentpage - 1)" [class.disabled] = "currentpage == 1">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item" *ngFor="let page of  [].constructor(totalPages); let i = index"><a class="page-link" (click)="setPage(i+1)" [class.active]="currentpage == i+1">{{i + 1 }}</a></li>
+
           <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
+            <a class="page-link" aria-label="Next"  (click)="setPage(currentpage+1)" [class.disabled] = "totalPages == 1">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
@@ -61,15 +60,31 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="formModalLabel">Pizza ~</h1>
+          <h1 class="modal-title fs-5" id="formModalLabel" *ngIf="!editmode">Pizza ~ Hozzáadása</h1>
+          <h1 class="modal-title fs-5" id="formModalLabel" *ngIf="editmode">Pizza ~ Módosítása</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          Műveletek....
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="name" placeholder="Név" [(ngModel)] = "pizza.name">
+            <label for="name">Név: <em>*</em></label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="number" class="form-control" id="calories" placeholder="Kalória" [(ngModel)] = "pizza.calories">
+            <label for="calories">Kalória: <em>*</em></label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="number" class="form-control" id="price" placeholder="Ár" [(ngModel)] = "pizza.price">
+            <label for="price">Ár: <em>*</em></label>
+          </div>
+          <div class="form-floating mb-3">
+            <textarea name="description" id="description" [(ngModel)] = "pizza.descrip"></textarea>
+            <label for="description">Leírás</label>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Mégsem</button>
-          <button type="button" class="btn btn-success">Megerősítés</button>
+          <button type="button" class="btn btn-success" (click)="save()">Megerősítés</button>
         </div>
       </div>
     </div>
@@ -85,11 +100,11 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          Biztos vagy te ebbe öcsi?
+          Biztosan törölni szeretnéd?
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hupika</button>
-          <button type="button" class="btn btn-danger">Igen</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nem</button>
+          <button type="button" class="btn btn-danger" (click)="delete()">Igen</button>
         </div>
       </div>
     </div>
