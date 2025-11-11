@@ -47,11 +47,7 @@ export class APIService {
 
   async Insert(table: string, data: any){
     try{
-<<<<<<< HEAD
       const res = await axios.post(`${this.SERVER}/${table}` , data)
-=======
-      const res = await axios.post(`${this.SERVER}/${table}` , data,{headers:{'Content-Type':'application.json'}})
->>>>>>> eb341e226cb4e2862c0d0d0e3c3f6e87edd8479a
     return {
       status:200,
       message: "Rekord felvéve",
