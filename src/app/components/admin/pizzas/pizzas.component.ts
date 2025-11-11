@@ -22,11 +22,12 @@ declare var bootstrap: any;
   styleUrl: './pizzas.component.scss'
 })
 export class PizzasComponent implements OnInit{
-
+  selectedFile : File | null = null;
   currentPage = 1;
   pageSize = 5;
   totalPages = 1;
   pagedPizza : Pizza[] = [];
+  
 
 
   formModal: any
@@ -67,17 +68,35 @@ export class PizzasComponent implements OnInit{
     })
   }
 
-  save(){
+  async save(){
+    this.pizza.image = ''
     if ( this.pizza.name == ""|| this.pizza.calories == 0|| this.pizza.price == 0){
       this.msg.show('danger','Hiba','Nem adtál meg minden kötelező adatot!')
       return
     }
+    if(this.selectedFile){
+      const formData = new FormData();
+      formData.append('image',this.selectedFile)
+      await this.Api.Upload(formData).then(res => {
+        if(res.status != 200){
+          this.msg.show('danger','Hiba',res.message!)
+          
+        }
+        else{
+          console.log(res.data)
+          this.pizza.image = res.data.filename
+        }
+       
+      });
+    }
     if(this.editmode){
       this.Api.SelectAll('pizzas/name/eq/'+this.pizza.name).then(res =>{
-        if(res.data.length !=0 &&res.data[0].id != this.pizza.id){
+        if(res.data.length !=0 && res.data[0].id != this.pizza.id){
           this.msg.show('danger','Hiba','Van már ilyen nevű pizza!')
         return
         }
+   
+
         this.Api.Update('pizzas', this.pizza.id,this.pizza).then(res=>{
           this.msg.show('success','OK',"Pizza sikeresen módosítva")
           this.formModal.hide()
@@ -95,11 +114,12 @@ export class PizzasComponent implements OnInit{
       })
     }
     else{
-
+      console.log(this.pizza.image)
       this.Api.SelectAll('pizzas/name/eq/'+this.pizza.name).then(res =>{
         if(res.data.length !=0){
           this.msg.show('danger','Hiba','Van már ilyen nevű pizza!')
         return
+         
         }
         this.Api.Insert('pizzas',this.pizza).then(res =>{
           this.msg.show('success','OK',"A pizza hozzáadva!")
@@ -152,5 +172,8 @@ export class PizzasComponent implements OnInit{
       this.editmode = true;
       this.formModal.show();
     })
+  }
+  onFileSelected(event: any){
+    this.selectedFile = event.target.files[0]
   }
 }

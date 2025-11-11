@@ -69,6 +69,10 @@
             <input type="text" class="form-control" id="name" placeholder="Név" [(ngModel)] = "pizza.name">
             <label for="name">Név: <em>*</em></label>
           </div>
+          <div class="mb-3">
+            <label for="formFileDisabled" class="form-label"></label>
+            <input class="form-control" type="file" id="image" accept="image/*" (change)="onFileSelected($event)">
+          </div>
           <div class="form-floating mb-3">
             <input type="number" class="form-control" id="calories" placeholder="Kalória" [(ngModel)] = "pizza.calories">
             <label for="calories">Kalória: <em>*</em></label>

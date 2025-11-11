@@ -143,4 +143,19 @@ export class APIService {
       }
     }
   }
+  async Upload(formData: FormData):Promise<apiRES>{
+    try{
+      const res = await axios.post(`${this.SERVER}/upload`, formData)
+    return {
+      status:200,
+      data : res.data
+    }
+    }
+    catch (err : any){
+      return {
+        status:500,
+        message: err.response.data.error
+      }
+    }
+  }
 }
