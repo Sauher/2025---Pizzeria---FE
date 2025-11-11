@@ -23,10 +23,10 @@ declare var bootstrap: any;
 })
 export class PizzasComponent implements OnInit{
 
-  currentpage = 1;
+  currentPage = 1;
   pageSize = 5;
   totalPages = 1;
-  pagedPizzas : Pizza[] = [];
+  pagedPizza : Pizza[] = [];
 
 
   formModal: any
@@ -46,6 +46,7 @@ export class PizzasComponent implements OnInit{
     calories: 0,
     price: 0
   };
+
   constructor(
     private Api: APIService,
     private msg: MessageService
@@ -66,22 +67,6 @@ export class PizzasComponent implements OnInit{
     })
   }
 
-  setPage(page: number){
-
-
-    this.currentpage = page
-    const startIndex = (page -1)*this.pageSize
-    const endIndex = startIndex + this.pageSize
-    this.pagedPizzas = this.pizzas.slice(startIndex,endIndex)
-  }
-
-  getPizza(id: number){
-    this.Api.Select('pizzas',id).then(res => {
-      this.pizza = res.data[0];
-      this.editmode = true;
-      this.formModal.show()
-    })
-  }
   save(){
     if ( this.pizza.name == ""|| this.pizza.calories == 0|| this.pizza.price == 0){
       this.msg.show('danger','Hiba','Nem adtál meg minden kötelező adatot!')
@@ -150,6 +135,22 @@ export class PizzasComponent implements OnInit{
         price: 0
       }
       this.getPizzas()
+    })
+  }
+
+  setPage(page:number){
+    
+    this.currentPage = page;
+    const startIndex = (page -1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    this.pagedPizza = this.pizzas.slice(startIndex,endIndex)
+  }
+
+  getPizza(id:number){
+    this.Api.Select('pizzas', id).then(res =>{
+      this.pizza = res.data[0];
+      this.editmode = true;
+      this.formModal.show();
     })
   }
 }

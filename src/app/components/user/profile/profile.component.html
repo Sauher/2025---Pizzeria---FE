@@ -3,20 +3,20 @@
     <h3 class="mb-4">Update my profile</h3>
 
     <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="nameProf" placeholder="name@example.com">
+        <input type="email" class="form-control" id="nameProf" placeholder="name@example.com" [(ngModel)]="updateUser.name">
         <label for="nameProf">Username</label>
     </div>
     <div class="form-floating mb-3">
-        <input type="email" class="form-control" id="emailProf" placeholder="name@example.com">
+        <input type="email" class="form-control" id="emailProf" placeholder="name@example.com" [(ngModel)]="updateUser.email">
         <label for="emailProf">Email address</label>
     </div>
     <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="phoneProf" placeholder="Password">
-        <label for="phoneProf">Phone</label>
+        <input type="password" class="form-control" id="phoneProf" placeholder="Password" [(ngModel)]="updateUser.password">
+        <label for="phoneProf">Password</label>
     </div>
     <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="adressProf" placeholder="Password">
-        <label for="adressProf">Adress</label>
+        <input type="password" class="form-control" id="adressProf" placeholder="Password" [(ngModel)]="updateUser.password">
+        <label for="adressProf">Confirm password</label>
     </div>
     <hr class="mb-3">
     <div class="form-floating mb-3">

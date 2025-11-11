@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let pizza of pagedPizzas; let i = index">
+            <tr *ngFor="let pizza of pagedPizza; let i = index">
                 <td>{{i+1}}.</td>
                 <td>{{pizza.image}}</td>
                 <td>{{pizza.name}}</td>
@@ -39,14 +39,14 @@
     <nav aria-label="Page navigation example" *ngIf="totalPages > 1">
         <ul class="pagination">
           <li class="page-item">
-            <a class="page-link" aria-label="Previous" (click)="setPage(currentpage - 1)" [class.disabled] = "currentpage == 1">
+            <a class="page-link" aria-label="Previous" (click)="setPage(currentPage - 1)" [class.disabled] = "currentPage == 1">
               <span aria-hidden="true">&laquo;</span>
             </a>
           </li>
-          <li class="page-item" *ngFor="let page of  [].constructor(totalPages); let i = index"><a class="page-link" (click)="setPage(i+1)" [class.active]="currentpage == i+1">{{i + 1 }}</a></li>
+          <li class="page-item" *ngFor="let page of  [].constructor(totalPages); let i = index"><a class="page-link" (click)="setPage(i+1)" [class.active]="currentPage == i+1">{{i + 1 }}</a></li>
 
           <li class="page-item">
-            <a class="page-link" aria-label="Next"  (click)="setPage(currentpage+1)" [class.disabled] = "totalPages == 1">
+            <a class="page-link" aria-label="Next"  (click)="setPage(currentPage+1)" [class.disabled] = "totalPages == 1">
               <span aria-hidden="true">&raquo;</span>
             </a>
           </li>
